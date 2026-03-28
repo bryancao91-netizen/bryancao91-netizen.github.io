@@ -1,0 +1,601 @@
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --g: #4a7c59; --a: #e07b39; --c: #fdf6ec; --b: #5c3d2e; --m: #6b6b6b; }
+  body { font-family: Georgia, serif; font-size: 14px; }
+  .site { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+  .nav { background: var(--b); display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; height: 44px; gap: 0.5rem; }
+  .nav-logo { color: #fff; font-size: 0.75rem; font-weight: 500; flex-shrink: 0; }
+  .nav-links { display: flex; gap: 0; overflow-x: auto; }
+  .nav-links button { background: none; border: none; color: #e8d5b7; font-size: 0.65rem; font-family: sans-serif; padding: 0 0.6rem; height: 44px; cursor: pointer; border-bottom: 2.5px solid transparent; white-space: nowrap; }
+  .nav-links button:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .nav-links button.active { color: #fff; border-bottom-color: var(--a); }
+  .page { display: none; }
+  .page.active { display: block; min-height: 85vh;}
+  .hero { background: linear-gradient(135deg, var(--g) 0%, #2d5a3d 60%, var(--b) 100%); padding: 2.5rem 1.5rem 2rem; text-align: center; }
+  .hero-logo-box { width: 52px; height: 52px; border-radius: 8px; background: rgba(255,255,255,0.15); border: 1px dashed rgba(255,255,255,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+  .hero-logo-box span { font-size: 0.55rem; color: rgba(255,255,255,0.6); font-family: sans-serif; text-align: center; line-height: 1.3; }
+  .htag { display: inline-block; background: var(--a); color: #fff; font-family: sans-serif; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.7rem; border-radius: 20px; margin-bottom: 0.75rem; }
+  .hero h1 { font-size: 1.1rem; color: #fff; line-height: 1.2; margin-bottom: 0.6rem; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .hero p { font-size: 0.72rem; color: #c8dfc8; font-family: sans-serif; line-height: 1.6; max-width: 380px; margin: 0 auto 1.25rem; }
+  .hmeta { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .hmi .num { font-size: 1.2rem; font-weight: bold; color: #fff; text-align: center; }
+  .hmi .lbl { font-size: 0.55rem; color: #a8c8a8; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
+  .hcta { display: flex; justify-content: center; gap: 0.6rem; }
+  .btn { font-family: sans-serif; font-size: 0.65rem; font-weight: 700; padding: 0.45rem 1rem; border-radius: 7px; cursor: pointer; border: none; }
+  .btn-p { background: var(--a); color: #fff; }
+  .btn-o { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.5); }
+  .sec { padding: 1.5rem; min-height: 85vh; }
+  .sec.wh { background: #fff; }
+  .sec.alt { background: var(--c); }
+  .sec.grn { background: var(--g); }
+  .stag { display: inline-block; background: #e8f4ec; color: var(--g); font-family: sans-serif; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; padding: 0.18rem 0.6rem; border-radius: 20px; margin-bottom: 0.6rem; }
+  .stag.inv { background: rgba(255,255,255,0.2); color: #fff; }
+  .stag.amb { background: #fdf0e6; color: var(--a); }
+  h2 { font-size: 1rem; color: var(--b); margin-bottom: 0.5rem; }
+  h2.inv { color: #fff; }
+  .lead { font-size: 0.72rem; color: var(--m); font-family: sans-serif; line-height: 1.7; margin-bottom: 1.25rem; }
+  .lead.inv { color: #c8dfc8; }
+  .g4 { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.65rem; }
+  .ocard { background: var(--c); border-radius: 8px; padding: 0.85rem; border-left: 3px solid var(--g); }
+  .ocard .ic { font-size: 1rem; margin-bottom: 0.35rem; }
+  .ocard h4 { font-size: 0.72rem; color: var(--b); margin-bottom: 0.25rem; }
+  .ocard p { font-family: sans-serif; font-size: 0.65rem; color: var(--m); line-height: 1.5; }
+  .cblock { background: #fff; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; border-left: 3px solid var(--g); }
+  .cblock h3 { font-size: 0.78rem; color: var(--b); margin-bottom: 0.35rem; }
+  .cblock p { font-family: sans-serif; font-size: 0.65rem; color: var(--m); line-height: 1.6; }
+  .tl { display: flex; flex-direction: column; margin-top: 1rem; }
+  .tli { display: grid; grid-template-columns: 60px 12px 1fr; gap: 0.6rem; padding-bottom: 1rem; position: relative; }
+  .tli::before { content:''; position: absolute; left: 67px; top: 8px; bottom: 0; width: 1.5px; background: #e8f4ec; }
+  .tli:last-child::before { display: none; }
+  .tly { font-family: sans-serif; font-size: 0.62rem; font-weight: 700; color: var(--g); text-align: right; padding-top: 2px; }
+  .tld { width: 8px; height: 8px; background: var(--g); border-radius: 50%; margin-top: 3px; }
+  .tlc h4 { font-size: 0.7rem; color: var(--b); margin-bottom: 0.2rem; }
+  .tlc p { font-family: sans-serif; font-size: 0.62rem; color: var(--m); line-height: 1.5; }
+  .chgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.65rem; margin-bottom: 1rem; }
+  .chcard { background: #fff; border-radius: 8px; padding: 0.85rem; border-top: 3px solid #e24b4a; }
+  .chcard .ci { font-size: 1rem; margin-bottom: 0.3rem; }
+  .chcard h3 { font-size: 0.72rem; color: var(--b); margin-bottom: 0.25rem; }
+  .chcard p { font-family: sans-serif; font-size: 0.62rem; color: var(--m); line-height: 1.5; }
+  .connector { background: var(--g); border-radius: 8px; padding: 1rem; margin: 0.85rem 0; display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.75rem; align-items: center; }
+  .connector .arr { font-size: 1.2rem; color: #fff; text-align: center; }
+  .connector .cs h4 { font-family: sans-serif; font-size: 0.58rem; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: 0.25rem; }
+  .connector .cs p { font-family: sans-serif; font-size: 0.65rem; color: #fff; line-height: 1.5; }
+  .solgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.65rem; }
+  .solcard { background: #fff; border-radius: 8px; padding: 0.85rem; border-top: 3px solid var(--g); }
+  .solcard .si { font-size: 1rem; margin-bottom: 0.3rem; }
+  .solcard h3 { font-size: 0.72rem; color: var(--b); margin-bottom: 0.25rem; }
+  .solcard p { font-family: sans-serif; font-size: 0.62rem; color: var(--m); line-height: 1.5; }
+  .clist { display: flex; flex-direction: column; gap: 0.85rem; }
+  .citem { background: #fff; border-radius: 8px; overflow: hidden; display: grid; grid-template-columns: 1fr 100px; border: 0.5px solid var(--color-border-tertiary); }
+  .cleft { padding: 0.85rem; display: flex; flex-direction: column; gap: 0.65rem; }
+  .cheader { display: flex; align-items: center; gap: 0.5rem; }
+  .cnum { width: 28px; height: 28px; background: var(--g); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: bold; flex-shrink: 0; }
+  .croute { font-family: sans-serif; font-size: 0.58rem; font-weight: 700; color: var(--g); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.15rem; }
+  .ctitle { font-size: 0.72rem; color: var(--b); line-height: 1.3; }
+  .igrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .ib { background: var(--c); border-radius: 6px; padding: 0.4rem 0.55rem; }
+  .ib.fw { grid-column: 1/-1; }
+  .ilbl { font-family: sans-serif; font-size: 0.55rem; font-weight: 700; text-transform: uppercase; color: var(--m); margin-bottom: 0.15rem; letter-spacing: 0.06em; }
+  .ival { font-family: sans-serif; font-size: 0.65rem; color: #2d2d2d; line-height: 1.4; }
+  .bdgs { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+  .bdg { font-family: sans-serif; font-size: 0.55rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 5px; background: #e8f4ec; color: var(--g); }
+  .bdg.a { background: #fdf0e6; color: var(--a); }
+  .bdg.br { background: #f2ece7; color: var(--b); }
+  .cimg { background: #e4ede7; border-left: 1.5px dashed #c8ddd0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; padding: 0.75rem; }
+  .cimg .pi { font-size: 1.2rem; opacity: 0.35; }
+  .cimg .ph { font-family: sans-serif; font-size: 0.55rem; color: var(--g); text-align: center; opacity: 0.6; line-height: 1.3; }
+  .hgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .hfeats { display: flex; flex-direction: column; gap: 0.5rem; }
+  .hf { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 0.65rem 0.85rem; display: flex; gap: 0.5rem; align-items: flex-start; }
+  .hf .fi { font-size: 0.9rem; flex-shrink: 0; }
+  .hf h4 { font-size: 0.7rem; color: #fff; margin-bottom: 0.15rem; }
+  .hf p { font-family: sans-serif; font-size: 0.62rem; color: #c8dfc8; line-height: 1.5; }
+  .hcall { background: rgba(255,255,255,0.12); border-radius: 12px; padding: 1.25rem; text-align: center; }
+  .hcall .big { font-size: 1.8rem; font-weight: bold; color: #fff; }
+  .hcall .sub { font-family: sans-serif; font-size: 0.6rem; color: #a8c8a8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.85rem; }
+  .hcall hr { border: none; border-top: 0.5px solid rgba(255,255,255,0.2); margin: 0.75rem 0; }
+  .hcall .sr { display: flex; justify-content: space-around; }
+  .hcall .sv { font-size: 1rem; font-weight: bold; color: #fff; }
+  .hcall .sl { font-family: sans-serif; font-size: 0.52rem; color: #a8c8a8; text-transform: uppercase; }
+  .note-box { border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem; border-left: 3px solid var(--a); background: #fdf0e6; }
+  .note-box.green { background: #e8f4ec; border-left-color: var(--g); }
+  .note-box h4 { font-size: 0.7rem; color: var(--b); margin-bottom: 0.35rem; }
+  .note-box p { font-family: sans-serif; font-size: 0.62rem; color: #2d2d2d; line-height: 1.6; }
+  .csg { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.65rem; margin-bottom: 1rem; }
+  .cscard { background: var(--c); border-radius: 8px; padding: 0.85rem; }
+  .cscard .ci { font-size: 1rem; margin-bottom: 0.3rem; }
+  .cscard .range { font-size: 0.75rem; font-weight: bold; color: var(--b); margin-bottom: 0.2rem; }
+  .cscard h4 { font-size: 0.65rem; color: var(--g); margin-bottom: 0.2rem; }
+  .cscard p { font-family: sans-serif; font-size: 0.6rem; color: #2d2d2d; line-height: 1.4; }
+  .gtotal { background: var(--b); border-radius: 8px; padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; }
+  .gtotal h3 { font-size: 0.75rem; color: #e8d5b7; margin-bottom: 0.2rem; }
+  .gtotal p { font-family: sans-serif; font-size: 0.6rem; color: #c8b090; line-height: 1.4; max-width: 300px; }
+  .gtotal .tv { font-size: 1.3rem; font-weight: bold; color: #fff; white-space: nowrap; text-align: right; }
+  .gtotal .tvsub { font-family: sans-serif; font-size: 0.55rem; color: #c8b090; text-align: right; }
+  .abreak { background: #fff; border-radius: 8px; margin-bottom: 0.85rem; border: 0.5px solid var(--color-border-tertiary); overflow: hidden; }
+  .ahead { background: var(--c); padding: 0.65rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+  .ahead h3 { font-size: 0.72rem; color: var(--b); }
+  .ahead .ar { font-family: sans-serif; font-size: 0.65rem; font-weight: 700; color: var(--g); }
+  .abody { padding: 0.75rem 1rem; }
+  .mt { width: 100%; border-collapse: collapse; font-family: sans-serif; font-size: 0.62rem; margin-bottom: 0.5rem; }
+  .mt th { background: var(--b); color: #e8d5b7; padding: 0.35rem 0.5rem; text-align: left; font-size: 0.58rem; }
+  .mt td { padding: 0.3rem 0.5rem; border-bottom: 0.5px solid #f0ebe3; color: #2d2d2d; }
+  .mt tr:nth-child(even) td { background: var(--c); color: #2d2d2d; }
+  .mt td.amt { font-weight: bold; color: var(--b); white-space: nowrap; }
+  .mt .sub td { background: #f2ece7; font-weight: bold; color: var(--b); }
+  .comp { font-family: sans-serif; font-size: 0.6rem; color: var(--g); font-style: italic; padding: 0.35rem 0.5rem; background: #e8f4ec; border-radius: 5px; }
+  .fbarwrap { margin-bottom: 1.25rem; }
+  .fbarwrap h3 { font-size: 0.82rem; color: var(--b); margin-bottom: 0.75rem; }
+  .fbi { margin-bottom: 0.65rem; }
+  .fblbl { display: flex; justify-content: space-between; font-family: sans-serif; font-size: 0.62rem; margin-bottom: 0.2rem; color: #2d2d2d; }
+  .fblbl span:last-child { font-weight: bold; color: var(--b); }
+  .fbtrack { background: #e8e0d8; border-radius: 20px; height: 8px; overflow: hidden; }
+  .fbfill { height: 100%; border-radius: 20px; background: var(--g); }
+  .fbfill.a { background: var(--a); }
+  .fbfill.br { background: var(--b); }
+  .fbfill.pu { background: #7f77dd; }
+  .fgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.65rem; margin-bottom: 1.25rem; }
+  .fcard { background: var(--c); border-radius: 8px; padding: 0.85rem; border-top: 3px solid var(--a); }
+  .fcard h4 { font-size: 0.7rem; color: var(--b); margin-bottom: 0.25rem; }
+  .fcard .amt { font-size: 0.85rem; font-weight: bold; color: var(--a); margin-bottom: 0.15rem; }
+  .fcard .cov { font-family: sans-serif; font-size: 0.58rem; font-weight: 700; color: var(--g); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem; }
+  .fcard p { font-family: sans-serif; font-size: 0.6rem; color: #2d2d2d; line-height: 1.5; }
+  .p2 { background: linear-gradient(135deg, var(--a), #c45e1a); color: #fff; border-radius: 8px; padding: 1.1rem 1.25rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; }
+  .p2 h3 { font-size: 0.82rem; margin-bottom: 0.35rem; }
+  .p2 p { font-family: sans-serif; font-size: 0.62rem; color: rgba(255,255,255,0.88); line-height: 1.6; }
+  .p2tag { background: rgba(255,255,255,0.2); padding: 0.65rem 0.85rem; border-radius: 8px; text-align: center; white-space: nowrap; }
+  .p2tag .pv { font-size: 1.1rem; font-weight: bold; color: #fff; display: block; }
+  .p2tag .pl { font-family: sans-serif; font-size: 0.55rem; opacity: 0.85; text-transform: uppercase; color: #fff; }
+  .tgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.65rem; }
+  .tcard { background: #fff; border-radius: 8px; display: grid; grid-template-columns: 80px 1fr; border: 0.5px solid var(--color-border-tertiary); overflow: hidden; min-height: 90px; }
+  .tphoto { display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1.5px dashed #c8ddd0; padding: 0.5rem; overflow: hidden; }
+  .tphoto img { width: 100%; height: 80px; object-fit: cover; border-radius: 6px; }
+  .tdet { padding: 0.65rem 0.85rem; display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; }
+  .tdet .tn { font-size: 0.72rem; color: var(--b); font-weight: bold; }
+  .tdet .tr { font-family: sans-serif; font-size: 0.58rem; font-weight: 700; color: var(--g); text-transform: uppercase; }
+  .tdet .tb { font-family: sans-serif; font-size: 0.62rem; color: var(--m); line-height: 1.5; }
+  .footer { background: var(--b); padding: 1.25rem; text-align: center; }
+  .footer h3 { font-size: 0.78rem; color: #fff; margin-bottom: 0.2rem; }
+  .footer p { font-family: sans-serif; font-size: 0.65rem; color: #c8b090; margin-bottom: 0.6rem; }
+  .fteam { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; }
+  .fmem { background: rgba(255,255,255,0.1); padding: 0.2rem 0.6rem; border-radius: 20px; font-family: sans-serif; font-size: 0.62rem; color: #e8d5b7; }
+</style>
+
+<div class="site">
+  <div class="nav">
+    <div class="nav-logo">I-710 ✦ Active Transportation</div>
+    <div class="nav-links">
+      <button class="active" onclick="sp('home',this)">Home</button>
+      <button onclick="sp('bg',this)">Background</button>
+      <button onclick="sp('ch',this)">Challenges & Solutions</button>
+      <button onclick="sp('cor',this)">Corridors</button>
+      <button onclick="sp('hub',this)">Mobility Hub</button>
+      <button onclick="sp('cost',this)">Cost & Funding</button>
+      <button onclick="sp('team',this)">Team</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div id="p-home" class="page active">
+    <div class="hero">
+      <div class="hero-logo-box"><span>CSUF<br>Logo</span></div>
+      <div class="htag">PSWS 2026 · ASCE Transportation Team</div>
+      <h1>Repurposing the I-710 South Stub into a Connected Active Transportation Corridor</h1>
+      <p>Transforming a decades-old freeway remnant into a connected corridor that reconnects El Sereno, Alhambra, and Monterey Park to Cal State Los Angeles.</p>
+      <div class="hmeta">
+        <div class="hmi"><div class="num">4</div><div class="lbl">Concept Areas</div></div>
+        <div class="hmi"><div class="num">4.2mi</div><div class="lbl">Total Network</div></div>
+        <div class="hmi"><div class="num">$9.5M</div><div class="lbl">Project Cost</div></div>
+        <div class="hmi"><div class="num">3</div><div class="lbl">Communities Served</div></div>
+      </div>
+      <div class="hcta">
+        <button class="btn btn-p" onclick="sp('bg',document.querySelectorAll('.nav-links button')[1])">Read the Background</button>
+        <button class="btn btn-o" onclick="sp('cor',document.querySelectorAll('.nav-links button')[3])">View Corridors</button>
+      </div>
+    </div>
+    <div class="sec wh">
+      <div class="stag">Project Overview</div>
+      <h2>A Corridor Built for People, Not Just Cars</h2>
+      <p class="lead">The I-710 South Stub has sat as an unfinished freeway fragment for decades. This proposal converts it into a connected active transportation network using a practical two-phase approach.</p>
+      <div class="g4">
+        <div class="ocard"><div class="ic">🛣️</div><h4>Phase One: Street Network</h4><p>Leverages existing streets for immediate cycling and pedestrian connections across three strategic corridors.</p></div>
+        <div class="ocard"><div class="ic">⚖️</div><h4>Equity at the Core</h4><p>El Sereno, Monterey Park, and Alhambra gain direct access to Cal State LA employment and transit.</p></div>
+        <div class="ocard"><div class="ic">📐</div><h4>Stays in Right-of-Way</h4><p>No private land acquisition. All improvements within existing public right-of-way.</p></div>
+        <div class="ocard"><div class="ic">🌱</div><h4>Restorative Justice</h4><p>Prioritizes minimal disruption and long-term community benefit.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKGROUND -->
+  <div id="p-bg" class="page">
+    <div class="sec alt">
+      <div class="stag">Background & History</div>
+      <h2>The Story Behind the I-710 Stub</h2>
+      <p class="lead">Understanding why this freeway exists — and why it was never completed — is essential context for the proposed transformation.</p>
+      <div class="cblock"><h3>Original Intent</h3><p>The SR-710 freeway extension was originally designed to connect Interstate 10 in Monterey Park to Interstate 210 in Pasadena, creating a continuous north-south corridor through the San Gabriel Valley. The southern segment was completed in the 1960s, but the full 4.5-mile extension was never finished — leaving behind a disconnected stub that has sat incomplete for over half a century.</p></div>
+      <div class="cblock"><h3>Why It Was Never Finished</h3><p>The proposed northern extension would have destroyed nearly 1,000 homes, displaced approximately 24,000 residents, and cut through established historic neighborhoods. Decades of sustained community opposition, environmental review challenges, and legal battles culminated in a 1999 federal court injunction halting further progress. The California Transportation Commission officially cancelled the project in June 2022</p></div>
+      <div class="cblock"><h3>Environmental Justice Context</h3><p>The I-710 corridor is one of the most polluted transportation corridors in the United States, carrying over 200,000 vehicles per day as a primary freight route serving the Ports of Los Angeles and Long Beach. Diesel emissions along the corridor have caused severe air quality impacts disproportionately affecting communities of color, making environmental justice a central concern in every decision about the stub's future.</p></div>
+      <div class="cblock"><h3>What Happens to the Land Now</h3><p>Following the 2022 cancellation, funding previously allocated to freeway expansion was redirected toward local street improvements and multimodal investments. In Pasadena, Caltrans transferred control of the northern stub to the city with accompanying transportation funds. The City of Alhambra is now actively considering repurposing the southern stub into an arterial street with pedestrian and bicycle facilities — the foundation this project builds upon.</p></div>
+      <h3 style="color:var(--b);margin:1.25rem 0 0.75rem;font-size:0.88rem;">Key Timeline</h3>
+      <div class="tl">
+        <div class="tli"><div class="tly">1960s</div><div class="tld"></div><div class="tlc"><h4>Construction Begins</h4><p>Freeway segment south of Pasadena constructed. Northern extension planned but not built.</p></div></div>
+        <div class="tli"><div class="tly">1999</div><div class="tld"></div><div class="tlc"><h4>Federal Court Injunction</h4><p>Court halts further progress on the extension.</p></div></div>
+        <div class="tli"><div class="tly">2022</div><div class="tld"></div><div class="tlc"><h4>Project Officially Cancelled</h4><p>California Transportation Commission officially ends I-710 extension project.</p></div></div>
+        <div class="tli"><div class="tly">2025–26</div><div class="tld"></div><div class="tlc"><h4>PSWS 2026 Proposal</h4><p>CSUF ASCE team proposes active transportation corridor as community-focused transformation.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHALLENGES -->
+  <div id="p-ch" class="page">
+    <div class="sec alt">
+      <div class="stag">Challenges & Solutions</div>
+      <h2>Why This Was a Problem — And How We're Solving It</h2>
+      <p class="lead">The I-710 stub created physical, social, and economic barriers for surrounding communities. Each challenge informed a specific design response.</p>
+      <div class="stag" style="margin-bottom:0.75rem;">The Challenges</div>
+      <div class="chgrid">
+        <div class="chcard"><div class="ci">🚧</div><h3>No Active Transportation Infrastructure</h3><p>[ Lack of bike facilities, restricted pedestrian access, vehicle-only design. ]</p></div>
+        <div class="chcard"><div class="ci">🗺️</div><h3>Fragmented Connectivity</h3><p>[ No continuous north-south bike route. I-10 and UP Railroad create barriers. ]</p></div>
+        <div class="chcard"><div class="ci">📏</div><h3>Significant Elevation Change</h3><p>[ 80-foot elevation difference between freeway lanes and Cal State LA transit hub. ]</p></div>
+        <div class="chcard"><div class="ci">🏭</div><h3>Physical & Jurisdictional Barriers</h3><p>[ Laguna Channel, active Union Pacific Railroad, Caltrans jurisdiction. ]</p></div>
+        <div class="chcard"><div class="ci">⚖️</div><h3>Displacement Legacy</h3><p>[ Original construction displaced communities of color. Must not repeat. ]</p></div>
+        <div class="chcard"><div class="ci">💰</div><h3>Budget Constraints</h3><p>[ Proof of concept needed before Caltrans relinquishment. Cost pragmatism required. ]</p></div>
+      </div>
+      <div class="connector"><div class="cs"><h4>The Problem</h4><p>Fragmented communities, no safe routes, historically divisive infrastructure.</p></div><div class="arr">→</div><div class="cs"><h4>Our Response</h4><p>Two-phase strategy: immediate connectivity, then freeway conversion.</p></div></div>
+      <div class="stag" style="margin-bottom:0.75rem;">Our Solutions</div>
+      <div class="solgrid">
+        <div class="solcard"><div class="si">🛤️</div><h3>Three-Corridor Network</h3><p>[ Leverages existing streets, matches facility class to traffic context, stays in right-of-way. ]</p></div>
+        <div class="solcard"><div class="si">🏗️</div><h3>Strategic Hub Placement</h3><p>[ Westmont & Valley on surplus land. No acquisition costs. FTA eligible. ]</p></div>
+        <div class="solcard"><div class="si">📋</div><h3>Phased Implementation</h3><p>[ Phase One builds ridership data for Phase Two Reconnecting Communities grant. ]</p></div>
+        <div class="solcard"><div class="si">🤝</div><h3>Restorative Justice Design</h3><p>[ Avoids displacement. Underserved communities as primary users. ]</p></div>
+        <div class="solcard"><div class="si">💡</div><h3>Cost-Appropriate Facility Class</h3><p>[ Class III residential, Class II arterial. Tiered, not one-size-fits-all. ]</p></div>
+        <div class="solcard"><div class="si">🔗</div><h3>Dismount-Remount Strategy</h3><p>[ Enhanced crosswalk saves $75K+ vs. bike box at Valley & Mariondale. ]</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORRIDORS -->
+  <div id="p-cor" class="page">
+    <div class="sec alt">
+      <div class="stag">Network Corridors</div>
+      <h2>Three Areas. One Connected Network.</h2>
+      <p class="lead">Each corridor matches its traffic context — residential streets get Class III, higher-traffic arterials get Class II.</p>
+      <div class="clist">
+        <div class="citem">
+          <div class="cleft">
+            <div class="cheader"><div class="cnum">1</div><div><div class="croute">North-South Spine</div><div class="ctitle">Concord Avenue — Fremont Ave to Mission Rd</div></div></div>
+            <div class="igrid">
+              <div class="ib"><div class="ilbl">🚩 Start</div><div class="ival">S. Fremont Ave & W. Commonwealth Ave</div></div>
+              <div class="ib"><div class="ilbl">🏁 End</div><div class="ival">W. Mission Rd & Concord Ave</div></div>
+              <div class="ib"><div class="ilbl">🚲 Class</div><div class="ival">Class III — Shared lane markings</div></div>
+              <div class="ib"><div class="ilbl">📍 Landmarks</div><div class="ival">Fremont plaza, Alhambra Blvd Class IV</div></div>
+              <div class="ib fw"><div class="ilbl">⚠️ Key Intersections</div><div class="ival">Concord at Mission · Concord at Commonwealth · Fremont at Valley</div></div>
+            </div>
+            <div class="bdgs"><span class="bdg">Class III</span><span class="bdg a">0.8 mi</span><span class="bdg br">$474K–$627K fully loaded</span></div>
+          </div>
+          <div class="cimg"><div class="pi">🗺️</div><div class="ph">Add photo:<br>area1.jpg</div></div>
+        </div>
+        <div class="citem">
+          <div class="cleft">
+            <div class="cheader"><div class="cnum">2</div><div><div class="croute">East-West Gateway</div><div class="ctitle">Valley Blvd — Fremont Ave to Mariondale Ave</div></div></div>
+            <div class="igrid">
+              <div class="ib"><div class="ilbl">🚩 Start</div><div class="ival">S. Fremont Ave & Valley Blvd</div></div>
+              <div class="ib"><div class="ilbl">🏁 End</div><div class="ival">Mariondale Ave & Valley Blvd</div></div>
+              <div class="ib"><div class="ilbl">🚲 Class</div><div class="ival">Class II — Painted bike lanes</div></div>
+              <div class="ib"><div class="ilbl">📍 Landmarks</div><div class="ival">Westmont & Valley Hub, Metro Line 76</div></div>
+              <div class="ib fw"><div class="ilbl">⚠️ Key Intersections</div><div class="ival">Valley at Westmont (Hub) · Valley at Mariondale (dismount/remount)</div></div>
+            </div>
+            <div class="bdgs"><span class="bdg">Class II</span><span class="bdg a">0.8 mi</span><span class="bdg br">$1.82M–$2.21M fully loaded</span></div>
+          </div>
+          <div class="cimg"><div class="pi">🗺️</div><div class="ph">Add photo:<br>area2.jpg</div></div>
+        </div>
+        <div class="citem">
+          <div class="cleft">
+            <div class="cheader"><div class="cnum">3</div><div><div class="croute">Equity Backbone · South-North</div><div class="ctitle">Ramona → Hellman → Paseo Rancho Castilla → Mariondale</div></div></div>
+            <div class="igrid">
+              <div class="ib"><div class="ilbl">🚩 Start</div><div class="ival">Ramona Blvd at Winthrop Dr</div></div>
+              <div class="ib"><div class="ilbl">🏁 End</div><div class="ival">Mariondale at Paseo Rancho Castilla</div></div>
+              <div class="ib"><div class="ilbl">🚲 South</div><div class="ival">Class III — Ramona to Winthrop (0.4 mi)</div></div>
+              <div class="ib"><div class="ilbl">🚲 North</div><div class="ival">Class II — Hellman to Paseo Rancho (0.4 mi)</div></div>
+              <div class="ib fw"><div class="ilbl">⚠️ Key Intersections</div><div class="ival">Hellman at Winthrop · Hellman at Paseo Rancho · Paseo Rancho at Mariondale</div></div>
+            </div>
+            <div class="bdgs"><span class="bdg">Class II Hellman</span><span class="bdg">Class III Residential</span><span class="bdg a">0.8 mi</span><span class="bdg br">$1.12M–$1.40M fully loaded</span></div>
+          </div>
+          <div class="cimg"><div class="pi">🗺️</div><div class="ph">Add photo:<br>area3.jpg</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUB -->
+  <div id="p-hub" class="page">
+    <div class="sec grn">
+      <div class="stag inv">Mobility Hub</div>
+      <h2 class="inv">Westmont & Valley Boulevard Gateway</h2>
+      <p class="lead inv">Positioned on surplus I-710 land — a community gateway, not just a campus amenity. Site is a constructed freeway fill berm confirmed by Google Earth elevation data (123.81m to 130.72m = 6.91m height).</p>
+      <div class="hgrid">
+        <div class="hfeats">
+          <div class="hf"><div class="fi">🚲</div><div><h4>Covered Bike Parking</h4><p>Modular shelter, 20–30 bikes, secured and weather-protected.</p></div></div>
+          <div class="hf"><div class="fi">🗺️</div><div><h4>Wayfinding & Information</h4><p>Directional signage to all three corridors and Metro Line 76.</p></div></div>
+          <div class="hf"><div class="fi">🔧</div><div><h4>Bike Repair Station</h4><p>Tools and pump for on-site maintenance.</p></div></div>
+          <div class="hf"><div class="fi">🚌</div><div><h4>Transit-Adjacent</h4><p>Within half mile of Metro Line 76 — qualifies for FTA Capital Funds.</p></div></div>
+          <div class="hf"><div class="fi">⛰️</div><div><h4>Earthen Berm Excavation</h4><p>14,954 cy at 5–6m average depth. Parcel: 1,685 m² (18,140 sq ft). Excavation is 40–50% of total hub budget.</p></div></div>
+        </div>
+        <div class="hcall">
+          <div class="big">$1.05M</div>
+          <div class="sub">Revised Midpoint Estimate</div>
+          <hr/>
+          <div class="sr">
+            <div><div class="sv">14,954</div><div class="sl">Cubic Yards</div></div>
+            <div><div class="sv">15</div><div class="sl">Vehicles</div></div>
+            <div><div class="sv">30</div><div class="sl">Bikes</div></div>
+          </div>
+          <hr/>
+          <p style="font-family:sans-serif;font-size:0.6rem;color:#a8c8a8;line-height:1.5;margin-top:0.4rem;">Range: $1.05M–$2.02M. SCAG 710 Hubs Plan: $1.5M–$3M for comparable hubs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COST & FUNDING -->
+  <div id="p-cost" class="page">
+    <div class="sec wh">
+      <div class="stag">Cost Analysis & Funding</div>
+      <h2>Comprehensive Project Cost — Fully Loaded</h2>
+      <p class="lead">All figures include D&E (20%), construction management (12%), ADA curb ramps, signal modifications, pavement rehabilitation, CEQA, and 20% contingency — consistent with California public works standards.</p>
+
+      <div class="note-box green">
+        <h4>Mobility Hub Excavation — Corrected with Google Earth Measured Data</h4>
+        <p>The hub parcel is a constructed freeway fill berm, not a flat surplus lot. Google Earth confirms: parcel 1,685 m² (18,140 sq ft), elevation change 123.81m to 130.72m = 6.91m berm. Measured excavation volume: 14,954 cubic yards at 5–6m average depth. Excavation is legitimately 40–50% of total hub budget. Revised midpoint of $1.05M is consistent with SCAG's own $1.5M–$3M hub estimates for this corridor.</p>
+      </div>
+
+      <div class="stag amb" style="margin-bottom:0.75rem;">Project Summary</div>
+      <div class="csg">
+        <div class="cscard"><div class="ci">🏘️</div><div class="range">$474K – $627K</div><h4>Area 1A — Concord Ave (Class III, 0.8 mi)</h4><p>Comparable: Pasadena Del Mar Ave $500K–$700K for 0.8 mi residential Class III.</p></div>
+        <div class="cscard"><div class="ci">🛣️</div><div class="range">$3.66M – $4.35M</div><h4>Area 1B — Mission Rd (Class II, 1.7 mi)</h4><p>Comparable: Alhambra Main Street $5.7M/mi Class II with signals — same city, same jurisdiction.</p></div>
+        <div class="cscard"><div class="ci">🚦</div><div class="range">$1.82M – $2.21M</div><h4>Area 2 — Valley Blvd (Class II, 0.8 mi)</h4><p>Comparable: Long Beach Spring Street Greenway $1.5M/mi Class II/III with intersections.</p></div>
+        <div class="cscard"><div class="ci">🛤️</div><div class="range">$1.12M – $1.40M</div><h4>Area 3 — Ramona/Hellman (Class II+III, 0.8 mi)</h4><p>LA County residential-to-arterial transitions $1.2M–$1.8M/mi for mixed Class II/III.</p></div>
+        <div class="cscard"><div class="ci">📋</div><div class="range">$45K – $105K</div><h4>CEQA Environmental Review (project-wide)</h4><p>Required for all California public works projects modifying roadways.</p></div>
+        <div class="cscard"><div class="ci">🏗️</div><div class="range">$1.05M – $2.02M</div><h4>Mobility Hub — Westmont & Valley</h4><p>Revised with measured Google Earth data. 14,954 cy excavation confirmed. SCAG comparable: $1.5M–$3M.</p></div>
+      </div>
+
+      <div class="gtotal">
+        <div><h3>Revised Phase One Grand Total</h3><p>Roadway $7.12M–$8.69M + Hub $1.05M–$2.02M. Mid-end: $8.17M · High-end: $10.70M.</p></div>
+        <div><div class="tv">$8.17M – $10.70M</div><div class="tvsub">Fully loaded · All California multipliers applied</div></div>
+      </div>
+
+      <div class="stag amb" style="margin-bottom:0.75rem;">Area-by-Area Breakdown</div>
+
+      <div class="abreak">
+        <div class="ahead"><h3>Area 1A — Concord Avenue (Class III, 0.8 miles)</h3><div class="ar">$473K – $627K</div></div>
+        <div class="abody">
+          <table class="mt">
+            <thead><tr><th>Component</th><th>Mid-End</th><th>High-End</th></tr></thead>
+            <tbody>
+              <tr><td>Class III striping & markings (both sides)</td><td class="amt">$168,960</td><td class="amt">$168,960</td></tr>
+              <tr><td>Pavement rehabilitation/prep</td><td class="amt">$40,000</td><td class="amt">$80,000</td></tr>
+              <tr><td>ADA curb ramps (8 intersections x $10K)</td><td class="amt">$80,000</td><td class="amt">$120,000</td></tr>
+              <tr><td>Wayfinding signage</td><td class="amt">$10,000</td><td class="amt">$20,000</td></tr>
+              <tr><td>Design & Engineering (20%)</td><td class="amt">$59,800</td><td class="amt">$77,800</td></tr>
+              <tr><td>Construction Management (12%)</td><td class="amt">$35,875</td><td class="amt">$55,635</td></tr>
+              <tr><td>Contingency (20%)</td><td class="amt">$78,927</td><td class="amt">$104,479</td></tr>
+              <tr class="sub"><td>Area 1A Total</td><td class="amt">$473,562</td><td class="amt">$626,874</td></tr>
+            </tbody>
+          </table>
+          <div class="comp">Comparable: Pasadena Del Mar Ave bike lanes — $1.6M/mile fully loaded for residential Class II/III. Class III is lighter, so $500K–$700K for 0.8 miles is consistent.</div>
+        </div>
+      </div>
+
+      <div class="abreak">
+        <div class="ahead"><h3>Area 1B — Mission Road (Class II, 1.7 miles)</h3><div class="ar">$3.66M – $4.35M</div></div>
+        <div class="abody">
+          <table class="mt">
+            <thead><tr><th>Component</th><th>Mid-End</th><th>High-End</th></tr></thead>
+            <tbody>
+              <tr><td>Class II striping & bike lanes (both sides)</td><td class="amt">$1,795,200</td><td class="amt">$1,795,200</td></tr>
+              <tr><td>Pavement rehabilitation/prep</td><td class="amt">$150,000</td><td class="amt">$300,000</td></tr>
+              <tr><td>ADA curb ramps (18 intersections x $11K)</td><td class="amt">$198,000</td><td class="amt">$270,000</td></tr>
+              <tr><td>Traffic signal modifications (3 signals)</td><td class="amt">$150,000</td><td class="amt">$300,000</td></tr>
+              <tr><td>Wayfinding signage</td><td class="amt">$20,000</td><td class="amt">$35,000</td></tr>
+              <tr><td>Design & Engineering (20%)</td><td class="amt">$462,640</td><td class="amt">$540,040</td></tr>
+              <tr><td>Construction Management (12%)</td><td class="amt">$277,584</td><td class="amt">$384,029</td></tr>
+              <tr><td>Contingency (20%)</td><td class="amt">$610,685</td><td class="amt">$724,854</td></tr>
+              <tr class="sub"><td>Area 1B Total</td><td class="amt">$3,664,109</td><td class="amt">$4,349,123</td></tr>
+            </tbody>
+          </table>
+          <div class="comp">Comparable: Alhambra Main Street Complete Streets — $5.7M/mile for Class II with signals. Same city, same jurisdiction. At 1.7 miles, $3.5M–$4.5M is conservative and defensible.</div>
+        </div>
+      </div>
+
+      <div class="abreak">
+        <div class="ahead"><h3>Area 2 — Valley Boulevard (Class II, 0.8 miles)</h3><div class="ar">$1.82M – $2.21M</div></div>
+        <div class="abody">
+          <table class="mt">
+            <thead><tr><th>Component</th><th>Mid-End</th><th>High-End</th></tr></thead>
+            <tbody>
+              <tr><td>Class II striping & bike lanes (both sides)</td><td class="amt">$856,000</td><td class="amt">$856,000</td></tr>
+              <tr><td>Bike box at Fremont intersection</td><td class="amt">$5,600</td><td class="amt">$5,600</td></tr>
+              <tr><td>Pavement rehabilitation/prep</td><td class="amt">$80,000</td><td class="amt">$150,000</td></tr>
+              <tr><td>ADA curb ramps (8 intersections x $11K)</td><td class="amt">$88,000</td><td class="amt">$120,000</td></tr>
+              <tr><td>Traffic signal modifications (2 signals)</td><td class="amt">$100,000</td><td class="amt">$200,000</td></tr>
+              <tr><td>Enhanced crosswalk at Mariondale</td><td class="amt">$5,000</td><td class="amt">$15,000</td></tr>
+              <tr><td>Wayfinding signage</td><td class="amt">$15,000</td><td class="amt">$25,000</td></tr>
+              <tr><td>Design & Engineering (20%)</td><td class="amt">$229,920</td><td class="amt">$274,320</td></tr>
+              <tr><td>Construction Management (12%)</td><td class="amt">$137,952</td><td class="amt">$195,228</td></tr>
+              <tr><td>Contingency (20%)</td><td class="amt">$303,494</td><td class="amt">$368,230</td></tr>
+              <tr class="sub"><td>Area 2 Total</td><td class="amt">$1,820,966</td><td class="amt">$2,209,378</td></tr>
+            </tbody>
+          </table>
+          <div class="comp">Comparable: Long Beach Spring Street Greenway — $1.5M/mile for Class II/III with intersections. Valley Blvd at 0.8 miles at $1.8M–$2.2M is consistent.</div>
+        </div>
+      </div>
+
+      <div class="abreak">
+        <div class="ahead"><h3>Area 3 — Ramona / Hellman / Paseo Rancho Castilla (Class II+III, 0.8 miles)</h3><div class="ar">$1.12M – $1.40M</div></div>
+        <div class="abody">
+          <table class="mt">
+            <thead><tr><th>Component</th><th>Mid-End</th><th>High-End</th></tr></thead>
+            <tbody>
+              <tr><td>Class III striping — Ramona segment (0.4 mi, both sides)</td><td class="amt">$84,480</td><td class="amt">$84,480</td></tr>
+              <tr><td>Class II striping — Hellman segment (0.4 mi, both sides)</td><td class="amt">$422,400</td><td class="amt">$422,400</td></tr>
+              <tr><td>Pavement rehabilitation/prep</td><td class="amt">$60,000</td><td class="amt">$120,000</td></tr>
+              <tr><td>ADA curb ramps (8 intersections x $10K)</td><td class="amt">$80,000</td><td class="amt">$120,000</td></tr>
+              <tr><td>Traffic signal modification at Hellman/Winthrop</td><td class="amt">$50,000</td><td class="amt">$100,000</td></tr>
+              <tr><td>Wayfinding signage</td><td class="amt">$10,000</td><td class="amt">$20,000</td></tr>
+              <tr><td>Design & Engineering (20%)</td><td class="amt">$141,376</td><td class="amt">$173,376</td></tr>
+              <tr><td>Construction Management (12%)</td><td class="amt">$84,826</td><td class="amt">$123,423</td></tr>
+              <tr><td>Contingency (20%)</td><td class="amt">$186,616</td><td class="amt">$232,736</td></tr>
+              <tr class="sub"><td>Area 3 Total</td><td class="amt">$1,119,698</td><td class="amt">$1,396,415</td></tr>
+            </tbody>
+          </table>
+          <div class="comp">Comparable: LA County residential-to-arterial transitions run $1.2M–$1.8M per mile for mixed Class II/III with signal work.</div>
+        </div>
+      </div>
+
+      <div class="abreak">
+        <div class="ahead"><h3>Mobility Hub — Westmont & Valley (Corrected Excavation Data)</h3><div class="ar">$1.05M – $2.02M</div></div>
+        <div class="abody">
+          <table class="mt">
+            <thead><tr><th>Component</th><th>Mid-End</th><th>High-End</th></tr></thead>
+            <tbody>
+              <tr><td>Phase 1: Geotech + Environmental Phase I + Permits</td><td class="amt">$36,000</td><td class="amt">$72,000</td></tr>
+              <tr><td>Excavation — 14,954 cy compacted fill ($15–$28/cy)</td><td class="amt">$224,310</td><td class="amt">$418,712</td></tr>
+              <tr><td>Haul-off & disposal ($10–$18/cy)</td><td class="amt">$149,540</td><td class="amt">$269,172</td></tr>
+              <tr><td>Rough grading & leveling</td><td class="amt">$25,000</td><td class="amt">$55,000</td></tr>
+              <tr><td>Soil stabilization/remediation</td><td class="amt">$25,000</td><td class="amt">$60,000</td></tr>
+              <tr><td>Parking base course (15 vehicle spaces)</td><td class="amt">$18,000</td><td class="amt">$30,000</td></tr>
+              <tr><td>Phase 3: Prefab shelter + installation</td><td class="amt">$45,000</td><td class="amt">$85,000</td></tr>
+              <tr><td>Phase 3: Concrete pad, ADA hardscape, paving</td><td class="amt">$55,000</td><td class="amt">$100,000</td></tr>
+              <tr><td>Phase 3: Electrical, lighting & utilities</td><td class="amt">$65,000</td><td class="amt">$130,000</td></tr>
+              <tr><td>Phase 3: Signage, repair station, security, landscaping</td><td class="amt">$47,000</td><td class="amt">$103,000</td></tr>
+              <tr><td>A&E Design Fees (15%)</td><td class="amt">$103,478</td><td class="amt">$198,432</td></tr>
+              <tr><td>Construction Management (12%)</td><td class="amt">$82,782</td><td class="amt">$158,746</td></tr>
+              <tr><td>Contingency (20%)</td><td class="amt">$175,222</td><td class="amt">$336,012</td></tr>
+              <tr class="sub"><td>Mobility Hub Total</td><td class="amt">$1,051,332</td><td class="amt">$2,016,074</td></tr>
+            </tbody>
+          </table>
+          <div class="comp">Comparables: SCAG 710 Hubs Plan $1.5M–$3M · Metro Expo Line bike hub Santa Monica $2.5M · Metro neighborhood bike hubs $1M–$2M.</div>
+        </div>
+      </div>
+
+      <div class="stag amb" style="margin-bottom:0.75rem;margin-top:1.25rem;">Funding Sources</div>
+      <div class="fbarwrap">
+        <h3>Funding Allocation</h3>
+        <div class="fbi"><div class="fblbl"><span>STBG — Surface Transportation Block Grant</span><span>$2.85M–$4.34M</span></div><div class="fbtrack"><div class="fbfill" style="width:45%"></div></div></div>
+        <div class="fbi"><div class="fblbl"><span>CMAQ — Congestion Mitigation & Air Quality</span><span>$1.07M–$1.74M</span></div><div class="fbtrack"><div class="fbfill" style="width:18%"></div></div></div>
+        <div class="fbi"><div class="fblbl"><span>FTA Capital Funds (Mobility Hub)</span><span>$593K–$1.39M</span></div><div class="fbtrack"><div class="fbfill a" style="width:14%"></div></div></div>
+        <div class="fbi"><div class="fblbl"><span>Reconnecting Communities (Federal Supplement)</span><span>$500K–$1.0M</span></div><div class="fbtrack"><div class="fbfill pu" style="width:10%"></div></div></div>
+        <div class="fbi"><div class="fblbl"><span>City of Alhambra CIP Local Match</span><span>$356K–$695K</span></div><div class="fbtrack"><div class="fbfill br" style="width:8%"></div></div></div>
+        <div class="fbi"><div class="fblbl"><span>Cal State LA Institutional Match</span><span>$214K–$434K</span></div><div class="fbtrack"><div class="fbfill br" style="width:5%"></div></div></div>
+      </div>
+      <div class="fgrid">
+        <div class="fcard"><h4>STBG — Surface Transportation Block Grant</h4><div class="amt">$2.85M–$4.34M</div><div class="cov">Roadway Network 40–50%</div><p>Via SCAG. Prioritizes regional connectivity and safety improvements across the network.</p></div>
+        <div class="fcard"><h4>CMAQ — Congestion Mitigation & Air Quality</h4><div class="amt">$1.07M–$1.74M</div><div class="cov">Roadway Network 15–20%</div><p>Via South Coast AQMD. Targets VMT reduction — directly aligned with mode-shift goals.</p></div>
+        <div class="fcard"><h4>FTA Capital Funds</h4><div class="amt">$593K–$1.39M</div><div class="cov">Mobility Hub 80–90%</div><p>Hub within half mile of Metro Line 76. Improves first-last-mile transit connectivity.</p></div>
+        <div class="fcard"><h4>Reconnecting Communities</h4><div class="amt">$500K–$1.0M</div><div class="cov">Roadway Supplement</div><p>Competitive federal grant. Phase One aligns with program goals for community reconnection.</p></div>
+        <div class="fcard"><h4>City of Alhambra CIP</h4><div class="amt">$356K–$695K</div><div class="cov">Local Match 5–8%</div><p>Demonstrates municipal commitment required by federal funders.</p></div>
+        <div class="fcard"><h4>Cal State LA Institutional Match</h4><div class="amt">$214K–$434K</div><div class="cov">Institutional Match 3–5%</div><p>Campus access improvement justification. Combined with Alhambra hub local match of $148K–$155K.</p></div>
+      </div>
+      <div class="p2"><div><h3>Long-Term Vision: Phase Two I-710 Conversion</h3><p>Phase One ridership data becomes the evidence for Reconnecting Communities grant applications ($10–$15M), funding full freeway-to-arterial conversion with protected Class IV bikeways.</p></div><div class="p2tag"><span class="pv">$8–$12M</span><span class="pl">Est. Phase Two</span></div></div>
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div id="p-team" class="page">
+    <div class="sec alt">
+      <div class="stag">Meet the Team</div>
+      <h2>CSUF ASCE Transportation Team</h2>
+      <p class="lead">California State University, Fullerton — PSWS 2026 Transportation Design Report.</p>
+      <style>.tcard { min-height: 250px; padding: 1.5rem; }</style>
+      <div class="tgrid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4rem; padding: 3rem;">
+        <div class="tcard">
+          <div class="tphoto">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Bryan Cao" style="display:none;" onload="this.style.display='block'; this.src='/mnt/user-data/uploads/Bryan.png';" onerror="this.parentNode.innerHTML='<div class=\'pi\'>📷</div><div class=\'ph\'>bryan.jpg</div>';">
+          </div>
+          <div class="tdet">
+            <div class="tn">Bryan Cao</div>
+            <div class="tr">Project Manager</div>
+            <div class="tb">Leading coordination and strategic oversight for the I-710 active transportation proposal.</div>
+          </div>
+        </div>
+        <div class="tcard">
+          <div class="tphoto">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Alexia Montes" style="display:none;" onload="this.style.display='block'; this.src='/mnt/user-data/uploads/Alexia.png';" onerror="this.parentNode.innerHTML='<div class=\'pi\'>📷</div><div class=\'ph\'>alexia.jpg</div>';">
+          </div>
+          <div class="tdet">
+            <div class="tn">Alexia Montes</div>
+            <div class="tr">Researcher</div>
+            <div class="tb">Conducting data analysis and literature review for corridor planning and design justification.</div>
+          </div>
+        </div>
+        <div class="tcard">
+          <div class="tphoto">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Bryant Estrada Garcia" style="display:none;" onload="this.style.display='block'; this.src='/mnt/user-data/uploads/Bryant.png';" onerror="this.parentNode.innerHTML='<div class=\'pi\'>📷</div><div class=\'ph\'>bryant.jpg</div>';">
+          </div>
+          <div class="tdet">
+            <div class="tn">Bryant Estrada Garcia</div>
+            <div class="tr">Budget Analyst</div>
+            <div class="tb">Developing comprehensive cost estimates and funding strategy for Phase One implementation.</div>
+          </div>
+        </div>
+        <div class="tcard">
+          <div class="tphoto">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Jonpaul Bautista" style="display:none;" onload="this.style.display='block'; this.src='/mnt/user-data/uploads/Jonpaul.png';" onerror="this.parentNode.innerHTML='<div class=\'pi\'>📷</div><div class=\'ph\'>jonpaul.jpg</div>';">
+          </div>
+          <div class="tdet">
+            <div class="tn">Jonpaul Bautista</div>
+            <div class="tr">Researcher</div>
+            <div class="tb">Supporting technical analysis and corridor feasibility studies for the network design.</div>
+          </div>
+        </div>
+        <div class="tcard">
+          <div class="tphoto">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Lara Elakesh" style="display:none;" onload="this.style.display='block'; this.src='/mnt/user-data/uploads/Lara.png';" onerror="this.parentNode.innerHTML='<div class=\'pi\'>📷</div><div class=\'ph\'>lara.jpg</div>';">
+          </div>
+          <div class="tdet">
+            <div class="tn">Lara Elakesh</div>
+            <div class="tr">Planning & Construction</div>
+            <div class="tb">Managing design specifications and construction planning for mobility hub and corridor implementation.</div>
+          </div>
+        </div>
+        <div class="tcard">
+          <div class="tphoto">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Lily Chavez" style="display:none;" onload="this.style.display='block'; this.src='/mnt/user-data/uploads/Lily.png';" onerror="this.parentNode.innerHTML='<div class=\'pi\'>📷</div><div class=\'ph\'>lily.jpg</div>';">
+          </div>
+          <div class="tdet">
+            <div class="tn">Lily Chavez</div>
+            <div class="tr">Community Impact Analyst</div>
+            <div class="tb">Assessing equity impacts and community benefits of the active transportation corridor proposal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <h3>PSWS 2026 Transportation Design Report</h3>
+    <p>California State University, Fullerton · ASCE Transportation Team</p>
+    <div class="fteam">
+      <span class="fmem">Bryan Cao</span><span class="fmem">Alexia Montes</span><span class="fmem">Bryant Estrada Garcia</span><span class="fmem">Jonpaul Bautista</span><span class="fmem">Lara Elakesh</span><span class="fmem">Lily Chavez</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  function sp(id, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('p-' + id).classList.add('active');
+    document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    
+    // Trigger image loading for team photos when team page is viewed
+    if (id === 'team') {
+      document.querySelectorAll('.tphoto img').forEach(img => {
+        if (img.style.display === 'none') {
+          img.onload();
+        }
+      });
+    }
+  }
+</script>
